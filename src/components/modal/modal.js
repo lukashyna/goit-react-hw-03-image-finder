@@ -1,7 +1,6 @@
-import React, { Component, createRef } from "react";
-// import { createPortal } from "react-dom";
-import PropTypes from "prop-types";
-import styles from "./modal.module.css";
+import React, { Component, createRef } from 'react';
+import PropTypes from 'prop-types';
+import styles from './modal.module.css';
 
 export default class Modal extends Component {
   static propTypes = {
@@ -10,24 +9,29 @@ export default class Modal extends Component {
   };
 
   backdropRef = createRef();
+
   componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyPress);
+    window.addEventListener('keydown', this.handleKeyPress);
   }
+
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyPress);
+    window.removeEventListener('keydown', this.handleKeyPress);
   }
-  handleKeyPress = (e) => {
-    if (e.code !== "Escape") {
+
+  handleKeyPress = e => {
+    if (e.code !== 'Escape') {
       return;
     }
     this.props.onClose();
   };
-  handleBackdropClick = (e) => {
+
+  handleBackdropClick = e => {
     if (this.backdropRef.current && e.target !== this.backdropRef.current) {
       return;
     }
     this.props.onClose();
   };
+
   render() {
     const { largeImageURL } = this.props;
     return (
@@ -35,6 +39,8 @@ export default class Modal extends Component {
         className={styles.overlay}
         ref={this.backdropRef}
         onClick={this.handleBackdropClick}
+        onKeyPress={this.handleBackdropClick}
+        role="presentation"
       >
         <div className={styles.modal}>
           <img src={largeImageURL} alt="" />
