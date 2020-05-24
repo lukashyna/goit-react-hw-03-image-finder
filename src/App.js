@@ -19,10 +19,15 @@ export default class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { searchQuery } = this.state;
+    const { searchQuery, page } = this.state;
     const prevQuery = prevState.searchQuery;
     const nextQuery = searchQuery;
+    const prevPage = prevState.page;
+    const nextPage = page;
     if (prevQuery !== nextQuery) {
+      this.fetchArticles();
+    }
+    if (prevPage !== nextPage) {
       this.fetchArticles();
     }
     if (prevState.articles.length > 12) {
@@ -52,14 +57,10 @@ export default class App extends Component {
   };
 
   loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
     const { page } = this.state;
     this.setState({
       page: page + 1,
     });
-    this.fetchArticles();
   };
 
   handleSubmit = query => {
@@ -83,12 +84,7 @@ export default class App extends Component {
         <Searchbar onSubmit={this.handleSubmit} />
         {error && <Notification />}
         {articles.length > 0 && (
-          <ImageGallery
-            articles={articles}
-            largeImageURL={largeImageURL}
-            onClose={this.closeModal}
-            onGetLargeImageURL={this.getlargeImageURL}
-          />
+          <ImageGallery articles={articles} onClose={this.closeModal} onGetLargeImageURL={this.getlargeImageURL} />
         )}
         {loading && <Loader />}
         {articles.length > 0 && !loading && <Button onClick={this.loadMore} />}
